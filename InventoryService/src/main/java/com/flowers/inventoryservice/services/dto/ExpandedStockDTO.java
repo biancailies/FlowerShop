@@ -10,13 +10,14 @@ public class ExpandedStockDTO {
     private float sellingPrice;
     private String color;
     private int quantity;
+    private String imageUrl;
 
     public ExpandedStockDTO() {
     }
 
     public ExpandedStockDTO(int stockId, int flowerShopId, String flowerShopName,
                             int flowerId, String flowerName, float sellingPrice,
-                            String color, int quantity) {
+                            String color, int quantity, String imageUrl) {
         this.stockId = stockId;
         this.flowerShopId = flowerShopId;
         this.flowerShopName = flowerShopName;
@@ -25,6 +26,7 @@ public class ExpandedStockDTO {
         this.sellingPrice = sellingPrice;
         this.color = color;
         this.quantity = quantity;
+        this.imageUrl = imageUrl;
     }
 
     public int getStockId() {
@@ -89,5 +91,13 @@ public class ExpandedStockDTO {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

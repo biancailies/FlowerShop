@@ -53,12 +53,27 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<String> createUser(@RequestBody User user) {
+        if (user.getUsername() == null || user.getUsername().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("Username is required.");
+        }
+        if (user.getPassword() == null || user.getPassword().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("Password is required.");
+        }
+        
+        User existing = userService.getUserByUsername(user.getUsername());
+        if (existing != null) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Username already exists.");
+        }
+
         if (user.getId() == null) {
             user.setId(new UserId(0));
         }
         boolean result = userService.createUser(user);
         if (result) {
-            return ResponseEntity.status(HttpStatus.CREATED).body("User created successfully.");
+            // Re-fetch to get the assigned ID for bonus functionality
+            User created = userService.getUserByUsername(user.getUsername());
+            int createdId = created != null ? created.getId().getUserId() : 0;
+            return ResponseEntity.status(HttpStatus.CREATED).body(String.valueOf(createdId));
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to create user.");
     }

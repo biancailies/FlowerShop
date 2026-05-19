@@ -59,13 +59,40 @@ public class StockService {
         return stockDAO.delete(id);
     }
 
+    private static final String FLOWER_IMAGES_URL = "http://localhost:8081/api/images/flower";
+    private static final String STATISTICS_URL = "http://localhost:8084/api/statistics/sale";
+
     public boolean sellFlower(int stockId, int quantity) {
-        return stockDAO.sellFlower(stockId, quantity);
+        Stock stock = stockDAO.stockById(stockId);
+        if (stock == null) return false;
+        if (stock.getQuantity() < quantity) return false;
+        
+        boolean success = stockDAO.sellFlower(stockId, quantity);
+        if (success) {
+            try {
+                // Post to statistics service
+                FlowerDTO flower = getFlowerDetails(stock.getFlowerId());
+                if (flower != null) {
+                    float revenue = flower.getSellingPrice() * quantity;
+                    float profit = (flower.getSellingPrice() - flower.getPurchasePrice()) * quantity;
+
+                    java.util.Map<String, Object> saleRecord = new java.util.HashMap<>();
+                    saleRecord.put("flowerId", stock.getFlowerId());
+                    saleRecord.put("flowerName", flower.getName());
+                    saleRecord.put("flowerShopId", stock.getFlowerShopId().getFlowerShopId());
+                    saleRecord.put("quantitySold", quantity);
+                    saleRecord.put("revenue", revenue);
+                    saleRecord.put("profit", profit);
+
+                    restTemplate.postForEntity(STATISTICS_URL, saleRecord, String.class);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return success;
     }
 
-    /**
-     * Obține detalii despre floare din FlowerCatalogService prin REST.
-     */
     public FlowerDTO getFlowerDetails(int flowerId) {
         try {
             String url = FLOWER_CATALOG_URL + "/" + flowerId;
@@ -76,23 +103,32 @@ public class StockService {
         }
     }
 
-    /**
-     * Returnează stocurile cu detalii extinse (nume floare, preț, nume florărie).
-     * Comunică cu FlowerCatalogService prin REST pentru detalii despre flori.
-     */
+    public String getFlowerImageUrl(int flowerId) {
+        try {
+            String url = FLOWER_IMAGES_URL + "/" + flowerId;
+            java.util.List<java.util.Map<String, Object>> images = restTemplate.getForObject(url, java.util.List.class);
+            if (images != null && !images.isEmpty()) {
+                return (String) images.get(0).get("url");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null; // fallback
+    }
+
     public List<ExpandedStockDTO> getExpandedStocks() {
         List<Stock> stocks = stockDAO.stockList();
         List<ExpandedStockDTO> expandedList = new ArrayList<>();
 
         for (Stock stock : stocks) {
-            // Obține numele florăriei din baza proprie
             FlowerShop flowerShop = flowerShopDAO.flowerShopById(stock.getFlowerShopId().getFlowerShopId());
             String flowerShopName = (flowerShop != null) ? flowerShop.getName() : "Unknown";
 
-            // Obține detalii despre floare din FlowerCatalogService prin REST
             FlowerDTO flowerDTO = getFlowerDetails(stock.getFlowerId());
             String flowerName = (flowerDTO != null) ? flowerDTO.getName() : "Unknown";
             float sellingPrice = (flowerDTO != null) ? flowerDTO.getSellingPrice() : 0;
+            
+            String imageUrl = getFlowerImageUrl(stock.getFlowerId());
 
             ExpandedStockDTO expanded = new ExpandedStockDTO(
                     stock.getId().getStockId(),
@@ -102,7 +138,8 @@ public class StockService {
                     flowerName,
                     sellingPrice,
                     stock.getColor(),
-                    stock.getQuantity()
+                    stock.getQuantity(),
+                    imageUrl
             );
             expandedList.add(expanded);
         }

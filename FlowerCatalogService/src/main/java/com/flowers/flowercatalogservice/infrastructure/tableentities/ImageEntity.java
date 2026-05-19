@@ -17,7 +17,7 @@ public class ImageEntity {
     @Column(name = "flower_id", nullable = false)
     private int flowerId;
 
-    @Column(name = "url", nullable = false, length = 500)
+    @Column(name = "url", nullable = false, columnDefinition = "LONGTEXT")
     private String url;
 
     public ImageEntity() {

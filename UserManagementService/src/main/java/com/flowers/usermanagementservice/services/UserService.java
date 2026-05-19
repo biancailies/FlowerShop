@@ -3,17 +3,23 @@ package com.flowers.usermanagementservice.services;
 import com.flowers.usermanagementservice.domain.User;
 import com.flowers.usermanagementservice.domain.daocontracts.IUserDAO;
 import com.flowers.usermanagementservice.services.dto.LoginResponse;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
+import java.util.Map;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
 public class UserService {
 
     private final IUserDAO userDAO;
+    private final RestTemplate restTemplate;
+    private final String NOTIFICATION_URL = "http://localhost:8085/api/notifications/send";
 
-    public UserService(IUserDAO userDAO) {
+    public UserService(IUserDAO userDAO, RestTemplate restTemplate) {
         this.userDAO = userDAO;
+        this.restTemplate = restTemplate;
     }
 
     public List<User> getUsers() {
@@ -37,7 +43,24 @@ public class UserService {
     }
 
     public boolean updateUser(User user) {
-        return userDAO.update(user);
+        boolean result = userDAO.update(user);
+        if (result) {
+            sendNotification(user.getId().getUserId(), "EMAIL");
+            sendNotification(user.getId().getUserId(), "SMS");
+        }
+        return result;
+    }
+
+    private void sendNotification(int userId, String type) {
+        try {
+            Map<String, Object> request = new HashMap<>();
+            request.put("userId", userId);
+            request.put("message", "Authentication information was updated for your BloomChain account.");
+            request.put("type", type);
+            restTemplate.postForEntity(NOTIFICATION_URL, request, String.class);
+        } catch (Exception e) {
+            System.err.println("Failed to send " + type + " notification: " + e.getMessage());
+        }
     }
 
     public boolean deleteUser(int id) {
