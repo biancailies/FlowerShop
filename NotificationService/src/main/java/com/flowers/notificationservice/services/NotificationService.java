@@ -2,31 +2,28 @@ package com.flowers.notificationservice.services;
 
 import com.flowers.notificationservice.domain.Notification;
 import com.flowers.notificationservice.domain.daocontracts.INotificationDAO;
-import com.flowers.notificationservice.services.strategies.EmailNotificationStrategy;
 import com.flowers.notificationservice.services.strategies.NotificationStrategy;
-import com.flowers.notificationservice.services.strategies.SmsNotificationStrategy;
-import com.flowers.notificationservice.services.strategies.WhatsappNotificationStrategy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class NotificationService {
 
     private final INotificationDAO notificationDAO;
-    
-    private final EmailNotificationStrategy emailStrategy;
-    private final SmsNotificationStrategy smsStrategy;
-    private final WhatsappNotificationStrategy whatsappStrategy;
+    private final Map<String, NotificationStrategy> strategies;
 
     public NotificationService(INotificationDAO notificationDAO,
-                               EmailNotificationStrategy emailStrategy,
-                               SmsNotificationStrategy smsStrategy,
-                               WhatsappNotificationStrategy whatsappStrategy) {
+                               List<NotificationStrategy> strategies) {
         this.notificationDAO = notificationDAO;
-        this.emailStrategy = emailStrategy;
-        this.smsStrategy = smsStrategy;
-        this.whatsappStrategy = whatsappStrategy;
+        this.strategies = strategies.stream()
+                .collect(Collectors.toMap(
+                        strategy -> strategy.getType().toUpperCase(),
+                        Function.identity()
+                ));
     }
 
     public List<Notification> getNotifications() {
@@ -58,23 +55,15 @@ public class NotificationService {
      * apoi salvează notificarea în baza de date.
      */
     public boolean sendNotification(Notification notification) {
-        NotificationStrategy strategy = null;
+        if (notification.getType() == null) {
+            System.out.println("Notification type is required.");
+            return false;
+        }
 
-        if (notification.getType() != null) {
-            switch (notification.getType().toUpperCase()) {
-                case "EMAIL":
-                    strategy = emailStrategy;
-                    break;
-                case "SMS":
-                    strategy = smsStrategy;
-                    break;
-                case "WHATSAPP":
-                    strategy = whatsappStrategy;
-                    break;
-                default:
-                    System.out.println("Unknown notification type: " + notification.getType());
-                    return false;
-            }
+        NotificationStrategy strategy = strategies.get(notification.getType().toUpperCase());
+        if (strategy == null) {
+            System.out.println("Unknown notification type: " + notification.getType());
+            return false;
         }
 
         if (strategy != null) {

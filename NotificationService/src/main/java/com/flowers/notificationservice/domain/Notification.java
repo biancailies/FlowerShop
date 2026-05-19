@@ -6,6 +6,8 @@ public class Notification {
     private int userId;
     private String message;
     private String type;
+    private String recipientEmail;
+    private String recipientDiscordChannelId;
 
     public Notification() {
     }
@@ -56,6 +58,22 @@ public class Notification {
         this.type = type;
     }
 
+    public String getRecipientEmail() {
+        return recipientEmail;
+    }
+
+    public void setRecipientEmail(String recipientEmail) {
+        this.recipientEmail = recipientEmail;
+    }
+
+    public String getRecipientDiscordChannelId() {
+        return recipientDiscordChannelId;
+    }
+
+    public void setRecipientDiscordChannelId(String recipientDiscordChannelId) {
+        this.recipientDiscordChannelId = recipientDiscordChannelId;
+    }
+
     @Override
     public String toString() {
         return "Notification{" +
@@ -63,6 +81,8 @@ public class Notification {
                 ", userId=" + userId +
                 ", message='" + message + '\'' +
                 ", type='" + type + '\'' +
+                ", recipientEmail='" + recipientEmail + '\'' +
+                ", recipientDiscordChannelId='" + recipientDiscordChannelId + '\'' +
                 '}';
     }
 }

@@ -37,11 +37,20 @@ const Register = ({ lang, onSwitchToLogin }) => {
             // BONUS: Send Welcome Notification
             try {
                 if (createdUserId && !isNaN(createdUserId)) {
-                    await axios.post(`${NOTIFICATION_API}/send`, {
-                        userId: parseInt(createdUserId),
-                        message: "Welcome to BloomChain!",
-                        type: "EMAIL"
-                    });
+                    const userId = parseInt(createdUserId);
+                    await Promise.all([
+                        axios.post(`${NOTIFICATION_API}/send`, {
+                            userId,
+                            message: "Welcome to BloomChain!",
+                            type: "EMAIL",
+                            recipientEmail: username
+                        }),
+                        axios.post(`${NOTIFICATION_API}/send`, {
+                            userId,
+                            message: `New BloomChain account created for ${username}.`,
+                            type: "DISCORD"
+                        })
+                    ]);
                 }
             } catch (notifErr) {
                 console.error("Failed to send welcome notification", notifErr);

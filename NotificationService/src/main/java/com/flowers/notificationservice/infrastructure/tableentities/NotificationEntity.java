@@ -22,6 +22,12 @@ public class NotificationEntity {
     @Column(name = "type", nullable = false, length = 50)
     private String type;
 
+    @Column(name = "recipient_email", length = 255)
+    private String recipientEmail;
+
+    @Column(name = "recipient_discord_channel_id", length = 100)
+    private String recipientDiscordChannelId;
+
     public NotificationEntity() {
     }
 
@@ -34,15 +40,20 @@ public class NotificationEntity {
         this.userId = domainNotification.getUserId();
         this.message = domainNotification.getMessage();
         this.type = domainNotification.getType();
+        this.recipientEmail = domainNotification.getRecipientEmail();
+        this.recipientDiscordChannelId = domainNotification.getRecipientDiscordChannelId();
     }
 
     public Notification toNotification() {
-        return new Notification(
+        Notification notification = new Notification(
                 new NotificationId(this.id),
                 this.userId,
                 this.message,
                 this.type
         );
+        notification.setRecipientEmail(this.recipientEmail);
+        notification.setRecipientDiscordChannelId(this.recipientDiscordChannelId);
+        return notification;
     }
 
     public Integer getId() {
@@ -75,5 +86,21 @@ public class NotificationEntity {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getRecipientEmail() {
+        return recipientEmail;
+    }
+
+    public void setRecipientEmail(String recipientEmail) {
+        this.recipientEmail = recipientEmail;
+    }
+
+    public String getRecipientDiscordChannelId() {
+        return recipientDiscordChannelId;
+    }
+
+    public void setRecipientDiscordChannelId(String recipientDiscordChannelId) {
+        this.recipientDiscordChannelId = recipientDiscordChannelId;
     }
 }

@@ -22,5 +22,4 @@ CREATE TABLE IF NOT EXISTS notifications (
 -- Date de test
 INSERT INTO notifications (user_id, message, type) VALUES
 (1, 'Contul admin a fost actualizat.', 'EMAIL'),
-(2, 'Datele managerului au fost modificate.', 'SMS'),
-(3, 'Parola angajatului a fost schimbata.', 'WHATSAPP');
+(2, 'Datele managerului au fost modificate.', 'DISCORD');

@@ -1,0 +1,4 @@
+com\flowers\notificationservice\services\NotificationServiceTest$FixedResultStrategy.class
+com\flowers\notificationservice\services\NotificationServiceTest.class
+com\flowers\notificationservice\services\strategies\DiscordNotificationStrategyTest.class
+com\flowers\notificationservice\services\strategies\EmailNotificationStrategyTest.class

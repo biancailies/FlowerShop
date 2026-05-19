@@ -1,13 +1,15 @@
 package com.flowers.inventoryservice.services;
 
+import com.flowers.inventoryservice.clients.FlowerCatalogClient;
 import com.flowers.inventoryservice.domain.FlowerShop;
 import com.flowers.inventoryservice.domain.Stock;
 import com.flowers.inventoryservice.domain.daocontracts.IFlowerShopDAO;
 import com.flowers.inventoryservice.domain.daocontracts.IStockDAO;
+import com.flowers.inventoryservice.events.SaleCompletedEvent;
 import com.flowers.inventoryservice.services.dto.ExpandedStockDTO;
 import com.flowers.inventoryservice.services.dto.FlowerDTO;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,14 +19,17 @@ public class StockService {
 
     private final IStockDAO stockDAO;
     private final IFlowerShopDAO flowerShopDAO;
-    private final RestTemplate restTemplate;
+    private final FlowerCatalogClient flowerCatalogClient;
+    private final ApplicationEventPublisher eventPublisher;
 
-    private static final String FLOWER_CATALOG_URL = "http://localhost:8081/api/flowers";
-
-    public StockService(IStockDAO stockDAO, IFlowerShopDAO flowerShopDAO, RestTemplate restTemplate) {
+    public StockService(IStockDAO stockDAO,
+                        IFlowerShopDAO flowerShopDAO,
+                        FlowerCatalogClient flowerCatalogClient,
+                        ApplicationEventPublisher eventPublisher) {
         this.stockDAO = stockDAO;
         this.flowerShopDAO = flowerShopDAO;
-        this.restTemplate = restTemplate;
+        this.flowerCatalogClient = flowerCatalogClient;
+        this.eventPublisher = eventPublisher;
     }
 
     public List<Stock> getAllStocks() {
@@ -59,9 +64,6 @@ public class StockService {
         return stockDAO.delete(id);
     }
 
-    private static final String FLOWER_IMAGES_URL = "http://localhost:8081/api/images/flower";
-    private static final String STATISTICS_URL = "http://localhost:8084/api/statistics/sale";
-
     public boolean sellFlower(int stockId, int quantity) {
         Stock stock = stockDAO.stockById(stockId);
         if (stock == null) return false;
@@ -69,51 +71,22 @@ public class StockService {
         
         boolean success = stockDAO.sellFlower(stockId, quantity);
         if (success) {
-            try {
-                // Post to statistics service
-                FlowerDTO flower = getFlowerDetails(stock.getFlowerId());
-                if (flower != null) {
-                    float revenue = flower.getSellingPrice() * quantity;
-                    float profit = (flower.getSellingPrice() - flower.getPurchasePrice()) * quantity;
-
-                    java.util.Map<String, Object> saleRecord = new java.util.HashMap<>();
-                    saleRecord.put("flowerId", stock.getFlowerId());
-                    saleRecord.put("flowerName", flower.getName());
-                    saleRecord.put("flowerShopId", stock.getFlowerShopId().getFlowerShopId());
-                    saleRecord.put("quantitySold", quantity);
-                    saleRecord.put("revenue", revenue);
-                    saleRecord.put("profit", profit);
-
-                    restTemplate.postForEntity(STATISTICS_URL, saleRecord, String.class);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            eventPublisher.publishEvent(new SaleCompletedEvent(
+                    stockId,
+                    stock.getFlowerId(),
+                    stock.getFlowerShopId().getFlowerShopId(),
+                    quantity
+            ));
         }
         return success;
     }
 
     public FlowerDTO getFlowerDetails(int flowerId) {
-        try {
-            String url = FLOWER_CATALOG_URL + "/" + flowerId;
-            return restTemplate.getForObject(url, FlowerDTO.class);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        return flowerCatalogClient.getFlowerById(flowerId);
     }
 
     public String getFlowerImageUrl(int flowerId) {
-        try {
-            String url = FLOWER_IMAGES_URL + "/" + flowerId;
-            java.util.List<java.util.Map<String, Object>> images = restTemplate.getForObject(url, java.util.List.class);
-            if (images != null && !images.isEmpty()) {
-                return (String) images.get(0).get("url");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null; // fallback
+        return flowerCatalogClient.getFlowerImageUrl(flowerId);
     }
 
     public List<ExpandedStockDTO> getExpandedStocks() {

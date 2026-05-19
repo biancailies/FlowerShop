@@ -1,9 +1,9 @@
-com\flowers\statisticsservice\domain\StatisticsId.class
 com\flowers\statisticsservice\domain\daocontracts\IStatisticsDAO.class
+com\flowers\statisticsservice\infrastructure\tableentities\StatisticsEntity.class
+com\flowers\statisticsservice\controllers\StatisticsController.class
+com\flowers\statisticsservice\domain\Statistics.class
+com\flowers\statisticsservice\domain\StatisticsId.class
 com\flowers\statisticsservice\StatisticsServiceApplication.class
 com\flowers\statisticsservice\services\StatisticsService.class
 com\flowers\statisticsservice\infrastructure\repositories\StatisticsJpaRepository.class
 com\flowers\statisticsservice\infrastructure\StatisticsDAO.class
-com\flowers\statisticsservice\infrastructure\tableentities\StatisticsEntity.class
-com\flowers\statisticsservice\controllers\StatisticsController.class
-com\flowers\statisticsservice\domain\Statistics.class

@@ -1,0 +1,3 @@
+com\flowers\notificationservice\services\strategies\RestDiscordClient.class
+com\flowers\notificationservice\services\strategies\DiscordClient.class
+com\flowers\notificationservice\services\strategies\DiscordNotificationStrategy.class

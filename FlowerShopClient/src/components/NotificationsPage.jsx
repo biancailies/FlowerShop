@@ -38,8 +38,7 @@ const NotificationsPage = ({ lang }) => {
                     <input type="text" placeholder={t.message} value={formData.message} onChange={e => setFormData({...formData, message: e.target.value})} required />
                     <select value={formData.type} onChange={e => setFormData({...formData, type: e.target.value})}>
                         <option value="EMAIL">EMAIL</option>
-                        <option value="SMS">SMS</option>
-                        <option value="WHATSAPP">WHATSAPP</option>
+                        <option value="DISCORD">DISCORD</option>
                     </select>
                     <button type="submit" className="btn btn-primary">Send</button>
                 </form>
