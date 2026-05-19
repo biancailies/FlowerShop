@@ -1,0 +1,9 @@
+C:\Users\Bianca\Desktop\An3-sem2\PS\ProiectV3_IliesBiancaStudent\StatisticsService\src\main\java\com\flowers\statisticsservice\domain\Statistics.java
+C:\Users\Bianca\Desktop\An3-sem2\PS\ProiectV3_IliesBiancaStudent\StatisticsService\src\main\java\com\flowers\statisticsservice\domain\StatisticsId.java
+C:\Users\Bianca\Desktop\An3-sem2\PS\ProiectV3_IliesBiancaStudent\StatisticsService\src\main\java\com\flowers\statisticsservice\StatisticsServiceApplication.java
+C:\Users\Bianca\Desktop\An3-sem2\PS\ProiectV3_IliesBiancaStudent\StatisticsService\src\main\java\com\flowers\statisticsservice\infrastructure\StatisticsDAO.java
+C:\Users\Bianca\Desktop\An3-sem2\PS\ProiectV3_IliesBiancaStudent\StatisticsService\src\main\java\com\flowers\statisticsservice\services\StatisticsService.java
+C:\Users\Bianca\Desktop\An3-sem2\PS\ProiectV3_IliesBiancaStudent\StatisticsService\src\main\java\com\flowers\statisticsservice\controllers\StatisticsController.java
+C:\Users\Bianca\Desktop\An3-sem2\PS\ProiectV3_IliesBiancaStudent\StatisticsService\src\main\java\com\flowers\statisticsservice\infrastructure\repositories\StatisticsJpaRepository.java
+C:\Users\Bianca\Desktop\An3-sem2\PS\ProiectV3_IliesBiancaStudent\StatisticsService\src\main\java\com\flowers\statisticsservice\infrastructure\tableentities\StatisticsEntity.java
+C:\Users\Bianca\Desktop\An3-sem2\PS\ProiectV3_IliesBiancaStudent\StatisticsService\src\main\java\com\flowers\statisticsservice\domain\daocontracts\IStatisticsDAO.java
