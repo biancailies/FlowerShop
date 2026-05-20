@@ -1,11 +1,11 @@
 package com.flowers.inventoryservice.services;
 
-import com.flowers.inventoryservice.clients.FlowerCatalogClient;
+import com.flowers.inventoryservice.infrastructure.clients.FlowerCatalogClient;
 import com.flowers.inventoryservice.domain.FlowerShop;
 import com.flowers.inventoryservice.domain.Stock;
 import com.flowers.inventoryservice.domain.daocontracts.IFlowerShopDAO;
 import com.flowers.inventoryservice.domain.daocontracts.IStockDAO;
-import com.flowers.inventoryservice.events.SaleCompletedEvent;
+import com.flowers.inventoryservice.services.events.SaleCompletedEvent;
 import com.flowers.inventoryservice.services.dto.ExpandedStockDTO;
 import com.flowers.inventoryservice.services.dto.FlowerDTO;
 import org.springframework.context.ApplicationEventPublisher;

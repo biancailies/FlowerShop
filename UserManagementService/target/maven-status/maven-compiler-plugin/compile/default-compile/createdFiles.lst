@@ -1,1 +1,10 @@
+com\flowers\usermanagementservice\services\factories\ClientUserFactory.class
+com\flowers\usermanagementservice\infrastructure\CorsConfig.class
+com\flowers\usermanagementservice\infrastructure\RestTemplateConfig.class
+com\flowers\usermanagementservice\services\factories\ManagerUserFactory.class
 com\flowers\usermanagementservice\services\factories\UserFactory.class
+com\flowers\usermanagementservice\services\factories\UserFactoryRegistry.class
+com\flowers\usermanagementservice\controller\UserController.class
+com\flowers\usermanagementservice\services\factories\AdminUserFactory.class
+com\flowers\usermanagementservice\infrastructure\CorsConfig$1.class
+com\flowers\usermanagementservice\services\factories\EmployeeUserFactory.class

@@ -1,2 +1,2 @@
-com\flowers\inventoryservice\events\SaleCompletedListenerTest.class
+com\flowers\inventoryservice\services\events\SaleCompletedListenerTest.class
 com\flowers\inventoryservice\services\StockServiceTest.class

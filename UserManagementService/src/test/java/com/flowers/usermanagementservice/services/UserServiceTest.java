@@ -3,11 +3,16 @@ package com.flowers.usermanagementservice.services;
 import com.flowers.usermanagementservice.domain.User;
 import com.flowers.usermanagementservice.domain.UserId;
 import com.flowers.usermanagementservice.domain.daocontracts.IUserDAO;
-import com.flowers.usermanagementservice.services.factories.UserFactory;
+import com.flowers.usermanagementservice.services.factories.AdminUserFactory;
+import com.flowers.usermanagementservice.services.factories.ClientUserFactory;
+import com.flowers.usermanagementservice.services.factories.EmployeeUserFactory;
+import com.flowers.usermanagementservice.services.factories.ManagerUserFactory;
+import com.flowers.usermanagementservice.services.factories.UserFactoryRegistry;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.web.client.RestOperations;
 
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,11 +26,20 @@ import static org.mockito.Mockito.when;
 
 class UserServiceTest {
 
+    private UserFactoryRegistry userFactoryRegistry() {
+        return new UserFactoryRegistry(List.of(
+                new AdminUserFactory(),
+                new ManagerUserFactory(),
+                new EmployeeUserFactory(),
+                new ClientUserFactory()
+        ));
+    }
+
     @Test
     void createUserUsesFactoryBeforePersisting() {
         IUserDAO userDAO = mock(IUserDAO.class);
         RestOperations restTemplate = mock(RestOperations.class);
-        UserService service = new UserService(userDAO, restTemplate, new UserFactory());
+        UserService service = new UserService(userDAO, restTemplate, userFactoryRegistry());
         User incoming = new User("admin@example.com", "pass", "ADMIN", null);
 
         when(userDAO.insert(any(User.class))).thenReturn(true);
@@ -41,7 +55,7 @@ class UserServiceTest {
     void updateUserSendsEmailAndDiscordNotifications() {
         IUserDAO userDAO = mock(IUserDAO.class);
         RestOperations restTemplate = mock(RestOperations.class);
-        UserService service = new UserService(userDAO, restTemplate, new UserFactory());
+        UserService service = new UserService(userDAO, restTemplate, userFactoryRegistry());
         User user = new User(new UserId(5), "person@example.com", "pass", "CLIENT", null);
 
         when(userDAO.update(user)).thenReturn(true);

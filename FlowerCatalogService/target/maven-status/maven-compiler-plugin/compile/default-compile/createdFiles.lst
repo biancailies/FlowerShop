@@ -1,0 +1,4 @@
+com\flowers\flowercatalogservice\infrastructure\CorsConfig.class
+com\flowers\flowercatalogservice\controller\FlowerController.class
+com\flowers\flowercatalogservice\infrastructure\CorsConfig$1.class
+com\flowers\flowercatalogservice\controller\ImageController.class

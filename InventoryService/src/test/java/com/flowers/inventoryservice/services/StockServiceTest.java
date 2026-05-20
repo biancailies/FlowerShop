@@ -1,12 +1,12 @@
 package com.flowers.inventoryservice.services;
 
-import com.flowers.inventoryservice.clients.FlowerCatalogClient;
+import com.flowers.inventoryservice.infrastructure.clients.FlowerCatalogClient;
 import com.flowers.inventoryservice.domain.FlowerShopId;
 import com.flowers.inventoryservice.domain.Stock;
 import com.flowers.inventoryservice.domain.StockId;
 import com.flowers.inventoryservice.domain.daocontracts.IFlowerShopDAO;
 import com.flowers.inventoryservice.domain.daocontracts.IStockDAO;
-import com.flowers.inventoryservice.events.SaleCompletedEvent;
+import com.flowers.inventoryservice.services.events.SaleCompletedEvent;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.context.ApplicationEventPublisher;

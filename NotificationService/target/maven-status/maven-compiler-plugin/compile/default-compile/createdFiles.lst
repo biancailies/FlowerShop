@@ -1,3 +1,6 @@
+com\flowers\notificationservice\controller\NotificationController.class
 com\flowers\notificationservice\services\strategies\RestDiscordClient.class
+com\flowers\notificationservice\infrastructure\CorsConfig$1.class
+com\flowers\notificationservice\infrastructure\CorsConfig.class
 com\flowers\notificationservice\services\strategies\DiscordClient.class
 com\flowers\notificationservice\services\strategies\DiscordNotificationStrategy.class

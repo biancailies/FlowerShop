@@ -3,7 +3,7 @@ package com.flowers.usermanagementservice.services;
 import com.flowers.usermanagementservice.domain.User;
 import com.flowers.usermanagementservice.domain.daocontracts.IUserDAO;
 import com.flowers.usermanagementservice.services.dto.LoginResponse;
-import com.flowers.usermanagementservice.services.factories.UserFactory;
+import com.flowers.usermanagementservice.services.factories.UserFactoryRegistry;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestOperations;
@@ -16,13 +16,13 @@ public class UserService {
 
     private final IUserDAO userDAO;
     private final RestOperations restTemplate;
-    private final UserFactory userFactory;
+    private final UserFactoryRegistry userFactoryRegistry;
     private final String NOTIFICATION_URL = "http://localhost:8085/api/notifications/send";
 
-    public UserService(IUserDAO userDAO, RestOperations restTemplate, UserFactory userFactory) {
+    public UserService(IUserDAO userDAO, RestOperations restTemplate, UserFactoryRegistry userFactoryRegistry) {
         this.userDAO = userDAO;
         this.restTemplate = restTemplate;
-        this.userFactory = userFactory;
+        this.userFactoryRegistry = userFactoryRegistry;
     }
 
     public List<User> getUsers() {
@@ -42,7 +42,7 @@ public class UserService {
     }
 
     public boolean createUser(User user) {
-        return userDAO.insert(userFactory.createUser(user));
+        return userDAO.insert(userFactoryRegistry.createUser(user));
     }
 
     public boolean updateUser(User user) {

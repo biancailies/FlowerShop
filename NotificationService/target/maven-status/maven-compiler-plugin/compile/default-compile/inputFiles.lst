@@ -1,13 +1,13 @@
-C:\Users\Bianca\Desktop\An3-sem2\PS\Proiect_Florarie\NotificationService\src\main\java\com\flowers\notificationservice\controllers\NotificationController.java
+C:\Users\Bianca\Desktop\An3-sem2\PS\Proiect_Florarie\NotificationService\src\main\java\com\flowers\notificationservice\controller\NotificationController.java
 C:\Users\Bianca\Desktop\An3-sem2\PS\Proiect_Florarie\NotificationService\src\main\java\com\flowers\notificationservice\domain\NotificationId.java
 C:\Users\Bianca\Desktop\An3-sem2\PS\Proiect_Florarie\NotificationService\src\main\java\com\flowers\notificationservice\services\strategies\RestDiscordClient.java
 C:\Users\Bianca\Desktop\An3-sem2\PS\Proiect_Florarie\NotificationService\src\main\java\com\flowers\notificationservice\services\strategies\NotificationStrategy.java
 C:\Users\Bianca\Desktop\An3-sem2\PS\Proiect_Florarie\NotificationService\src\main\java\com\flowers\notificationservice\services\strategies\DiscordClient.java
-C:\Users\Bianca\Desktop\An3-sem2\PS\Proiect_Florarie\NotificationService\src\main\java\com\flowers\notificationservice\CorsConfig.java
 C:\Users\Bianca\Desktop\An3-sem2\PS\Proiect_Florarie\NotificationService\src\main\java\com\flowers\notificationservice\NotificationServiceApplication.java
 C:\Users\Bianca\Desktop\An3-sem2\PS\Proiect_Florarie\NotificationService\src\main\java\com\flowers\notificationservice\services\strategies\EmailNotificationStrategy.java
 C:\Users\Bianca\Desktop\An3-sem2\PS\Proiect_Florarie\NotificationService\src\main\java\com\flowers\notificationservice\services\strategies\DiscordNotificationStrategy.java
 C:\Users\Bianca\Desktop\An3-sem2\PS\Proiect_Florarie\NotificationService\src\main\java\com\flowers\notificationservice\domain\Notification.java
+C:\Users\Bianca\Desktop\An3-sem2\PS\Proiect_Florarie\NotificationService\src\main\java\com\flowers\notificationservice\infrastructure\CorsConfig.java
 C:\Users\Bianca\Desktop\An3-sem2\PS\Proiect_Florarie\NotificationService\src\main\java\com\flowers\notificationservice\infrastructure\NotificationDAO.java
 C:\Users\Bianca\Desktop\An3-sem2\PS\Proiect_Florarie\NotificationService\src\main\java\com\flowers\notificationservice\domain\daocontracts\INotificationDAO.java
 C:\Users\Bianca\Desktop\An3-sem2\PS\Proiect_Florarie\NotificationService\src\main\java\com\flowers\notificationservice\infrastructure\repositories\NotificationJpaRepository.java
