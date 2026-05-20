@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import { USER_API } from '../api/api';
+import apiClient, { AUTH_API } from '../api/api';
 import { translations } from '../translations/translations';
 
 const Login = ({ lang, onLoginSuccess, onSwitchToRegister }) => {
@@ -12,7 +11,7 @@ const Login = ({ lang, onLoginSuccess, onSwitchToRegister }) => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`${USER_API}/login`, { username, password });
+            const response = await apiClient.post(`${AUTH_API}/login`, { username, password });
             if (response.data.success) {
                 onLoginSuccess(response.data);
             } else {

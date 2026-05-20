@@ -1,0 +1,81 @@
+spring:
+  application:
+    name: ApiGatewayService
+  cloud:
+    gateway:
+      default-filters:
+        # Keep a single CORS header when downstream services also add one.
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
+      # Global CORS policy: React should call only the gateway.
+      globalcors:
+        add-to-simple-url-handler-mapping: true
+        cors-configurations:
+          '[/**]':
+            allowedOrigins:
+              - "http://localhost:5173"
+              - "http://127.0.0.1:5173"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+            allowCredentials: false
+      routes:
+        # Route flower catalog requests to FlowerCatalogService.
+        - id: flower-catalog-flowers
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/flowers,/api/flowers/**
+        - id: flower-catalog-images
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/images,/api/images/**
+
+        # Route inventory requests to InventoryService.
+        - id: inventory-stocks
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/stocks,/api/stocks/**
+        - id: inventory-flower-shops
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/flower-shops,/api/flower-shops/**
+        - id: inventory-flowershops-alias
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/flowershops,/api/flowershops/**
+          filters:
+            - RewritePath=/api/flowershops(?<segment>/?.*), /api/flower-shops$\{segment}
+
+        # Route user and auth requests to UserManagementService.
+        - id: user-management-users
+          uri: http://localhost:8083
+          predicates:
+            - Path=/api/users,/api/users/**
+        - id: user-management-auth
+          uri: http://localhost:8083
+          predicates:
+            - Path=/api/auth,/api/auth/**
+          filters:
+            - RewritePath=/api/auth(?<segment>/?.*), /api/users$\{segment}
+
+        # Route statistics and export-related requests to StatisticsService.
+        - id: statistics
+          uri: http://localhost:8084
+          predicates:
+            - Path=/api/statistics,/api/statistics/**
+        - id: export
+          uri: http://localhost:8084
+          predicates:
+            - Path=/api/export,/api/export/**
+
+        # Route notification requests to NotificationService.
+        - id: notifications
+          uri: http://localhost:8085
+          predicates:
+            - Path=/api/notifications,/api/notifications/**
+
+server:
+  port: 8080

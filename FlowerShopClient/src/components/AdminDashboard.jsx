@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { USER_API } from '../api/api';
+import apiClient, { USER_API } from '../api/api';
 import { translations } from '../translations/translations';
 import NotificationsPage from './NotificationsPage';
 import { exportToCSV, exportToJSON, exportToXML, exportToDOC } from '../utils/exportUtils';
@@ -20,7 +19,7 @@ const AdminDashboard = ({ lang }) => {
             if (filterType !== 'ALL') {
                 url = `${USER_API}/type/${filterType}`;
             }
-            const res = await axios.get(url);
+            const res = await apiClient.get(url);
             setUsers(res.data);
         } catch (err) { console.error(err); }
     };
@@ -48,11 +47,11 @@ const AdminDashboard = ({ lang }) => {
             if (editMode) {
                 // Update
                 data.id = { userId: editUserId };
-                await axios.put(USER_API, data);
+                await apiClient.put(USER_API, data);
                 alert(t.updateSuccess || "Updated successfully!");
             } else {
                 // Create
-                await axios.post(USER_API, data);
+                await apiClient.post(USER_API, data);
                 alert(t.createSuccess || "Created successfully!");
             }
             fetchUsers();
@@ -69,7 +68,7 @@ const AdminDashboard = ({ lang }) => {
 
     const handleDelete = async (userId) => {
         try {
-            await axios.delete(`${USER_API}/${userId}`);
+            await apiClient.delete(`${USER_API}/${userId}`);
             fetchUsers();
         } catch (err) { console.error(err); }
     };

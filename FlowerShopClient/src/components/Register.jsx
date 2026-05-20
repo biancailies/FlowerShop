@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import { USER_API, NOTIFICATION_API } from '../api/api';
+import apiClient, { USER_API, NOTIFICATION_API } from '../api/api';
 import { translations } from '../translations/translations';
 
 const Register = ({ lang, onSwitchToLogin }) => {
@@ -29,7 +28,7 @@ const Register = ({ lang, onSwitchToLogin }) => {
                 flowerShopId: null
             };
 
-            const response = await axios.post(USER_API, userData);
+            const response = await apiClient.post(USER_API, userData);
             const createdUserId = response.data; // Backend now returns the created ID as string
 
             setSuccessMsg(t.registerSuccess || "Account created successfully.");
@@ -39,13 +38,13 @@ const Register = ({ lang, onSwitchToLogin }) => {
                 if (createdUserId && !isNaN(createdUserId)) {
                     const userId = parseInt(createdUserId);
                     await Promise.all([
-                        axios.post(`${NOTIFICATION_API}/send`, {
+                        apiClient.post(`${NOTIFICATION_API}/send`, {
                             userId,
                             message: "Welcome to BloomChain!",
                             type: "EMAIL",
                             recipientEmail: username
                         }),
-                        axios.post(`${NOTIFICATION_API}/send`, {
+                        apiClient.post(`${NOTIFICATION_API}/send`, {
                             userId,
                             message: `New BloomChain account created for ${username}.`,
                             type: "DISCORD"

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { NOTIFICATION_API } from '../api/api';
+import apiClient, { NOTIFICATION_API } from '../api/api';
 import { translations } from '../translations/translations';
 
 const NotificationsPage = ({ lang }) => {
@@ -10,7 +9,7 @@ const NotificationsPage = ({ lang }) => {
 
     const fetchNotifs = async () => {
         try {
-            const res = await axios.get(NOTIFICATION_API);
+            const res = await apiClient.get(NOTIFICATION_API);
             setNotifs(res.data);
         } catch (err) { console.error(err); }
     };
@@ -20,7 +19,7 @@ const NotificationsPage = ({ lang }) => {
     const handleSend = async (e) => {
         e.preventDefault();
         try {
-            await axios.post(`${NOTIFICATION_API}/send`, formData);
+            await apiClient.post(`${NOTIFICATION_API}/send`, formData);
             alert("Notification sent!");
             fetchNotifs();
             setFormData({ userId: '', message: '', type: 'EMAIL' });

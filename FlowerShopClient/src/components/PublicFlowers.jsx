@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { INVENTORY_API, FLOWERSHOP_API } from '../api/api';
+import apiClient, { INVENTORY_API, FLOWERSHOP_API } from '../api/api';
 import FlowerCard from './FlowerCard';
 import { translations } from '../translations/translations';
 
@@ -17,8 +16,8 @@ const PublicFlowers = ({ lang, user }) => {
         const fetchData = async () => {
             try {
                 const [stocksRes, shopsRes] = await Promise.all([
-                    axios.get(`${INVENTORY_API}/expanded`),
-                    axios.get(FLOWERSHOP_API)
+                    apiClient.get(`${INVENTORY_API}/expanded`),
+                    apiClient.get(FLOWERSHOP_API)
                 ]);
                 // Only keep positive stock
                 setStocks(stocksRes.data.filter(s => s.quantity > 0));

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { INVENTORY_API } from '../api/api';
+import apiClient, { INVENTORY_API } from '../api/api';
 import FlowerCard from './FlowerCard';
 import { translations } from '../translations/translations';
 import { exportToCSV, exportToJSON, exportToXML, exportToDOC } from '../utils/exportUtils';
@@ -24,7 +23,7 @@ const EmployeeDashboard = ({ lang, user }) => {
 
     const fetchStocks = async () => {
         try {
-            const res = await axios.get(`${INVENTORY_API}/expanded`);
+            const res = await apiClient.get(`${INVENTORY_API}/expanded`);
             setAllStocks(res.data);
             const employeeStocks = res.data.filter(s => s.flowerShopId === user.flowerShopId);
             setStocks(employeeStocks);
@@ -42,7 +41,7 @@ const EmployeeDashboard = ({ lang, user }) => {
         if (!qtyToSell || isNaN(qtyToSell) || qtyToSell <= 0) return;
 
         try {
-            await axios.put(`${INVENTORY_API}/sell/${stockId}/${qtyToSell}`);
+            await apiClient.put(`${INVENTORY_API}/sell/${stockId}/${qtyToSell}`);
             fetchStocks();
             alert("Sale successful!");
         } catch (error) {
@@ -62,10 +61,10 @@ const EmployeeDashboard = ({ lang, user }) => {
             };
 
             if (isEditMode) {
-                await axios.put(INVENTORY_API, payload);
+                await apiClient.put(INVENTORY_API, payload);
                 alert(t.updateSuccess || "Stock updated!");
             } else {
-                await axios.post(INVENTORY_API, payload);
+                await apiClient.post(INVENTORY_API, payload);
                 alert(t.createSuccess || "Stock added!");
             }
             setStockForm({ stockId: '', flowerId: '', color: '', quantity: '' });

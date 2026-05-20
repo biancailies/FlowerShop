@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { STATISTICS_API } from '../api/api';
+import apiClient, { STATISTICS_API } from '../api/api';
 import { translations } from '../translations/translations';
 
 const StatisticsPage = ({ lang }) => {
@@ -10,10 +9,10 @@ const StatisticsPage = ({ lang }) => {
 
     const fetchStats = async () => {
         try {
-            const summaryRes = await axios.get(`${STATISTICS_API}/sale/summary`);
+            const summaryRes = await apiClient.get(`${STATISTICS_API}/sale/summary`);
             setSummary(summaryRes.data);
 
-            const salesRes = await axios.get(`${STATISTICS_API}/sale`);
+            const salesRes = await apiClient.get(`${STATISTICS_API}/sale`);
             setSales(salesRes.data.sort((a, b) => new Date(b.saleDate) - new Date(a.saleDate)));
         } catch (err) { console.error(err); }
     };

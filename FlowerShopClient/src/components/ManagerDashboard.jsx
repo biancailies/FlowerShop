@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { FLOWER_API, IMAGE_API } from '../api/api';
+import apiClient, { FLOWER_API, IMAGE_API } from '../api/api';
 import { translations } from '../translations/translations';
 import StatisticsPage from './StatisticsPage';
 import PublicFlowers from './PublicFlowers';
@@ -20,14 +19,14 @@ const ManagerDashboard = ({ lang }) => {
 
     const fetchFlowers = async () => {
         try {
-            const res = await axios.get(FLOWER_API);
+            const res = await apiClient.get(FLOWER_API);
             setFlowers(res.data);
         } catch (err) { console.error(err); }
     };
 
     const fetchImages = async () => {
         try {
-            const res = await axios.get(IMAGE_API);
+            const res = await apiClient.get(IMAGE_API);
             setImages(res.data);
         } catch (err) { console.error(err); }
     };
@@ -41,10 +40,10 @@ const ManagerDashboard = ({ lang }) => {
         e.preventDefault();
         try {
             if (isEditMode) {
-                await axios.put(FLOWER_API, formData);
+                await apiClient.put(FLOWER_API, formData);
                 alert(t.updateSuccess || "Flower updated");
             } else {
-                await axios.post(FLOWER_API, {
+                await apiClient.post(FLOWER_API, {
                     name: formData.name,
                     purchasePrice: parseFloat(formData.purchasePrice),
                     sellingPrice: parseFloat(formData.sellingPrice)
@@ -64,7 +63,7 @@ const ManagerDashboard = ({ lang }) => {
 
     const handleFlowerDelete = async (flowerId) => {
         try {
-            await axios.delete(`${FLOWER_API}/${flowerId}`);
+            await apiClient.delete(`${FLOWER_API}/${flowerId}`);
             fetchFlowers();
         } catch (err) { console.error(err); }
     };
@@ -89,10 +88,10 @@ const ManagerDashboard = ({ lang }) => {
                 url: imageForm.url
             };
             if (isImageEdit) {
-                await axios.put(IMAGE_API, payload);
+                await apiClient.put(IMAGE_API, payload);
                 alert("Image updated");
             } else {
-                await axios.post(IMAGE_API, payload);
+                await apiClient.post(IMAGE_API, payload);
                 alert("Image added");
             }
             fetchImages();
@@ -112,7 +111,7 @@ const ManagerDashboard = ({ lang }) => {
 
     const handleImageDelete = async (id) => {
         try {
-            await axios.delete(`${IMAGE_API}/${id}`);
+            await apiClient.delete(`${IMAGE_API}/${id}`);
             fetchImages();
         } catch (err) { console.error(err); }
     };
