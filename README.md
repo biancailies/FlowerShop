@@ -265,6 +265,4 @@ This project was developed to demonstrate:
 
 ---
 
-# Authors
-
 Developed as part of a university software engineering project.
