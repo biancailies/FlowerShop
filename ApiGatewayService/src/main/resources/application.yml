@@ -25,25 +25,25 @@ spring:
       routes:
         # Route flower catalog requests to FlowerCatalogService.
         - id: flower-catalog-flowers
-          uri: http://localhost:8081
+          uri: ${FLOWER_CATALOG_SERVICE_URL:http://localhost:8081}
           predicates:
             - Path=/api/flowers,/api/flowers/**
         - id: flower-catalog-images
-          uri: http://localhost:8081
+          uri: ${FLOWER_CATALOG_SERVICE_URL:http://localhost:8081}
           predicates:
             - Path=/api/images,/api/images/**
 
         # Route inventory requests to InventoryService.
         - id: inventory-stocks
-          uri: http://localhost:8082
+          uri: ${INVENTORY_SERVICE_URL:http://localhost:8082}
           predicates:
             - Path=/api/stocks,/api/stocks/**
         - id: inventory-flower-shops
-          uri: http://localhost:8082
+          uri: ${INVENTORY_SERVICE_URL:http://localhost:8082}
           predicates:
             - Path=/api/flower-shops,/api/flower-shops/**
         - id: inventory-flowershops-alias
-          uri: http://localhost:8082
+          uri: ${INVENTORY_SERVICE_URL:http://localhost:8082}
           predicates:
             - Path=/api/flowershops,/api/flowershops/**
           filters:
@@ -51,11 +51,11 @@ spring:
 
         # Route user and auth requests to UserManagementService.
         - id: user-management-users
-          uri: http://localhost:8083
+          uri: ${USER_MANAGEMENT_SERVICE_URL:http://localhost:8083}
           predicates:
             - Path=/api/users,/api/users/**
         - id: user-management-auth
-          uri: http://localhost:8083
+          uri: ${USER_MANAGEMENT_SERVICE_URL:http://localhost:8083}
           predicates:
             - Path=/api/auth,/api/auth/**
           filters:
@@ -63,17 +63,17 @@ spring:
 
         # Route statistics and export-related requests to StatisticsService.
         - id: statistics
-          uri: http://localhost:8084
+          uri: ${STATISTICS_SERVICE_URL:http://localhost:8084}
           predicates:
             - Path=/api/statistics,/api/statistics/**
         - id: export
-          uri: http://localhost:8084
+          uri: ${STATISTICS_SERVICE_URL:http://localhost:8084}
           predicates:
             - Path=/api/export,/api/export/**
 
         # Route notification requests to NotificationService.
         - id: notifications
-          uri: http://localhost:8085
+          uri: ${NOTIFICATION_SERVICE_URL:http://localhost:8085}
           predicates:
             - Path=/api/notifications,/api/notifications/**
 

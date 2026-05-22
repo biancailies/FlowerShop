@@ -1,0 +1,131 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: flowershop-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  flower-catalog-service:
+    build: ./FlowerCatalogService
+    container_name: flower-catalog-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/flower_catalog_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+    ports:
+      - "8081:8081"
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  inventory-service:
+    build: ./InventoryService
+    container_name: inventory-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/inventory_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      SERVICES_FLOWER_CATALOG_FLOWERS_URL: http://flower-catalog-service:8081/api/flowers
+      SERVICES_FLOWER_CATALOG_IMAGES_URL: http://flower-catalog-service:8081/api/images/flower
+      SERVICES_STATISTICS_SALE_URL: http://statistics-service:8084/api/statistics/sale
+    ports:
+      - "8082:8082"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      flower-catalog-service:
+        condition: service_started
+      statistics-service:
+        condition: service_started
+
+  user-management-service:
+    build: ./UserManagementService
+    container_name: user-management-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/user_management_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+    ports:
+      - "8083:8083"
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  statistics-service:
+    build: ./StatisticsService
+    container_name: statistics-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/statistics_service_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+    ports:
+      - "8084:8084"
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  notification-service:
+    build: ./NotificationService
+    container_name: notification-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/notification_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      MAIL_USERNAME: ${MAIL_USERNAME:-}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+      MAIL_DEFAULT_RECIPIENT: ${MAIL_DEFAULT_RECIPIENT:-}
+      DISCORD_BOT_TOKEN: ${DISCORD_BOT_TOKEN:-}
+      DISCORD_CHANNEL_ID: ${DISCORD_CHANNEL_ID:-}
+    ports:
+      - "8085:8085"
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  api-gateway-service:
+    build: ./ApiGatewayService
+    container_name: api-gateway-service
+    environment:
+      FLOWER_CATALOG_SERVICE_URL: http://flower-catalog-service:8081
+      INVENTORY_SERVICE_URL: http://inventory-service:8082
+      USER_MANAGEMENT_SERVICE_URL: http://user-management-service:8083
+      STATISTICS_SERVICE_URL: http://statistics-service:8084
+      NOTIFICATION_SERVICE_URL: http://notification-service:8085
+    ports:
+      - "8080:8080"
+    depends_on:
+      flower-catalog-service:
+        condition: service_started
+      inventory-service:
+        condition: service_started
+      user-management-service:
+        condition: service_started
+      statistics-service:
+        condition: service_started
+      notification-service:
+        condition: service_started
+
+  flower-shop-client:
+    build:
+      context: ./FlowerShopClient
+      args:
+        VITE_API_BASE_URL: http://localhost:8080
+    container_name: flower-shop-client
+    ports:
+      - "5173:80"
+    depends_on:
+      api-gateway-service:
+        condition: service_started
+
+volumes:
+  mysql-data:
